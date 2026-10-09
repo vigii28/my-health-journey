@@ -1,0 +1,13 @@
+{
+  "name":"My Health Journey",
+  "short_name":"Health Journey",
+  "start_url":".",
+  "display":"standalone",
+  "background_color":"#F5F7F5",
+  "theme_color":"#145A46",
+  "description":"Personal health journey tracker",
+  "icons":[
+    {"src":"icons/icon-192.svg","sizes":"192x192","type":"image/svg+xml","purpose":"any maskable"},
+    {"src":"icons/icon-512.svg","sizes":"512x512","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
