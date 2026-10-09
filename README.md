@@ -40,3 +40,9 @@ For phone installation, publish the folder to an HTTPS static host such as GitHu
 6. Add CSV/PDF export.
 7. Add biometric/app-lock strategy where supported.
 8. Add secure cloud sync only if desired.
+
+## UI refresh
+- Added more spacing between the daily metrics and checklist.
+- Replaced navigation and common feature symbols with consistent outline SVG icons.
+- Refined typography with DM Sans and system-font fallbacks.
+- Updated service-worker cache version so browsers can fetch the new UI.

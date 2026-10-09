@@ -33,20 +33,35 @@ function render(){
   $('#app').innerHTML={home:home,health:health,log:log,insights:insights,more:more}[activeTab]();
 }
 
+function icon(name){
+ const paths={
+  weight:'<path d="M4 5h16l-1 15H5L4 5Z"/><path d="M9 5a3 3 0 0 1 6 0M8 11h8M9 15h6"/>',
+  heart:'<path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"/><path d="M3.5 12h4l2-4 3.2 8 2.1-4h5.7"/>',
+  timer:'<circle cx="12" cy="13" r="8"/><path d="M12 9v4l3 2M9 2h6M12 5V2"/>',
+  walk:'<circle cx="14" cy="4" r="2"/><path d="m12 8-3 4 3 2 1 6M12 9l4 3 3 0M9 12l-3 5M16 12l-2 4 4 4"/>',
+  water:'<path d="M12 3s-6 7-6 11a6 6 0 0 0 12 0c0-4-6-11-6-11Z"/>',
+  sleep:'<path d="M20 15.5A8 8 0 0 1 8.5 4 8 8 0 1 0 20 15.5Z"/>',
+  food:'<path d="M4 3v7M7 3v7M4 7h3M5.5 10v11M15 3v18M15 3c4 2 5 6 0 8"/>',
+  meds:'<path d="m4 14 6-6a4.2 4.2 0 0 1 6 6l-6 6a4.2 4.2 0 0 1-6-6Z"/><path d="m8 10 6 6"/>',
+  chart:'<path d="M4 19V5M4 19h17"/><path d="m7 15 4-4 3 2 5-7"/>',
+  more:'<circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/>'
+ }; return `<svg viewBox="0 0 24 24" aria-hidden="true">${paths[name]||paths.chart}</svg>`;
+}
+
 function home(){
   const s=score(), remain=Math.max(0,data.weight-data.goalWeight), progress=(data.startWeight-data.weight)/(data.startWeight-data.goalWeight);
   return `<div class="hero"><div><div class="eyebrow">TODAY</div><h2>Good day, Vignesh 🌱</h2><p>Small steps. Every day.</p></div><div class="score">${s}</div></div>
   <div class="section-title">Today</div>
   <div class="grid">
-    ${metric('⚖️','Weight',`${data.weight.toFixed(1)} kg`,'↓ this week')}
-    ${metric('♥','BP',data.bp[0]?`${data.bp[0].s}/${data.bp[0].d}`:'—','Latest reading')}
-    ${metric('◷','Fasting',data.fasting,`Goal ${data.fastingGoal}h`)}
-    ${metric('👣','Walking',data.steps.toLocaleString(),`/ ${data.stepGoal.toLocaleString()} steps`)}
-    ${metric('💧','Water',`${data.water} L`,`/ ${data.waterGoal} L`)}
-    ${metric('☾','Sleep',data.sleep,'Good')}
+    ${metric(icon('weight'),'Weight',`${data.weight.toFixed(1)} kg`,'↓ this week')}
+    ${metric(icon('heart'),'BP',data.bp[0]?`${data.bp[0].s}/${data.bp[0].d}`:'—','Latest reading')}
+    ${metric(icon('timer'),'Fasting',data.fasting,`Goal ${data.fastingGoal}h`)}
+    ${metric(icon('walk'),'Walking',data.steps.toLocaleString(),`/ ${data.stepGoal.toLocaleString()} steps`)}
+    ${metric(icon('water'),'Water',`${data.water} L`,`/ ${data.waterGoal} L`)}
+    ${metric(icon('sleep'),'Sleep',data.sleep,'Good')}
   </div>
   ${card(`<div class="row"><strong>Today's checklist</strong><span class="muted">${Object.values(data.checks).filter(Boolean).length}/5</span></div>
-    ${check('bp','Log blood pressure')}${check('med','Take medication')}${check('fast','Complete fasting goal')}${check('steps','Reach 8,000 steps')}${check('exercise','Strength exercise')}`)}
+    ${check('bp','Log blood pressure')}${check('med','Take medication')}${check('fast','Complete fasting goal')}${check('steps','Reach 8,000 steps')}${check('exercise','Strength exercise')}`, 'card checklist-card')}
   ${card(`<div class="row"><strong>Journey to 64 kg</strong><b>${remain.toFixed(1)} kg left</b></div><div style="margin:14px 0 8px" class="progress"><div style="width:${Math.max(0,progress*100)}%"></div></div><div class="row muted"><span>${data.weight.toFixed(1)} kg</span><span>64 kg</span></div>`)}
   `;
 }
@@ -65,30 +80,30 @@ function health(){
 
 function log(){
  return `<div class="section-title">What would you like to log?</div>${[
- ['♥','Blood Pressure','Systolic, diastolic, pulse','openBp()'],
- ['⚖️','Weight','Weight and waist','openWeight()'],
- ['◷','Fasting','Start or end a fast','openFasting()'],
- ['👣','Walking','Steps and active minutes','openSteps()'],
- ['🥗','Meal','Meal and nutrition habits','openMeal()'],
- ['☾','Sleep','Duration and quality','openSleep()']
+ [icon('heart'),'Blood Pressure','Systolic, diastolic, pulse','openBp()'],
+ [icon('weight'),'Weight','Weight and waist','openWeight()'],
+ [icon('timer'),'Fasting','Start or end a fast','openFasting()'],
+ [icon('walk'),'Walking','Steps and active minutes','openSteps()'],
+ [icon('food'),'Meal','Meal and nutrition habits','openMeal()'],
+ [icon('sleep'),'Sleep','Duration and quality','openSleep()']
  ].map(x=>`<div class="card log-tile" onclick="${x[3]}"><div class="round-icon">${x[0]}</div><div><h3>${x[1]}</h3><p>${x[2]}</p></div><span>›</span></div>`).join('')}`;
 }
 
 function insights(){
  return `${card(`<strong>What's working for you?</strong>
- <div class="insight"><div class="round-icon">👣</div><div><strong>Walking</strong><p>On higher-step days, your evening BP can be compared with lower-step days as more data accumulates.</p></div></div>
- <div class="insight"><div class="round-icon">☾</div><div><strong>Sleep</strong><p>Keep collecting sleep and BP data to identify your personal patterns.</p></div></div>
- <div class="insight"><div class="round-icon">◷</div><div><strong>Fasting</strong><p>You are currently targeting a ${data.fastingGoal}-hour fasting window.</p></div></div>`)}
+ <div class="insight"><div class="round-icon">${icon('walk')}</div><div><strong>Walking</strong><p>On higher-step days, your evening BP can be compared with lower-step days as more data accumulates.</p></div></div>
+ <div class="insight"><div class="round-icon">${icon('sleep')}</div><div><strong>Sleep</strong><p>Keep collecting sleep and BP data to identify your personal patterns.</p></div></div>
+ <div class="insight"><div class="round-icon">${icon('timer')}</div><div><strong>Fasting</strong><p>You are currently targeting a ${data.fastingGoal}-hour fasting window.</p></div></div>`)}
  ${card(`<strong>Weekly consistency</strong><div class="section-title">Walking</div><div class="progress"><div style="width:${pct(data.steps,data.stepGoal)}%"></div></div><p class="muted">${data.steps.toLocaleString()} / ${data.stepGoal.toLocaleString()} steps today</p><div class="section-title">BP logging</div><div class="progress"><div style="width:100%"></div></div><p class="muted">Keep recording morning and evening readings when appropriate.</p>`)}`;
 }
 
 function more(){
  return `${card(`<strong>My Health Journey</strong><p class="muted">A private, offline-first tracker. Your current entries are stored in this browser on this device.</p>`)}
- ${card(`<div class="log-tile" onclick="openSimple('Medications','Medication name')"><div class="round-icon">💊</div><div><h3>Medications</h3><p>Track scheduled doses</p></div>›</div>
- <div class="log-tile" onclick="openMeal()"><div class="round-icon">🥗</div><div><h3>Food & Nutrition</h3><p>Track simple food habits</p></div>›</div>
- <div class="log-tile" onclick="openSleep()"><div class="round-icon">☾</div><div><h3>Sleep</h3><p>Duration and quality</p></div>›</div>
- <div class="log-tile" onclick="exportData()"><div class="round-icon">⇩</div><div><h3>Export my data</h3><p>Download a JSON backup</p></div>›</div>
- <div class="log-tile" onclick="resetDemo()"><div class="round-icon">↻</div><div><h3>Reset demo data</h3><p>Restore the sample dashboard</p></div>›</div>`)}`;
+ ${card(`<div class="log-tile" onclick="openSimple('Medications','Medication name')"><div class="round-icon">${icon('meds')}</div><div><h3>Medications</h3><p>Track scheduled doses</p></div>›</div>
+ <div class="log-tile" onclick="openMeal()"><div class="round-icon">${icon('food')}</div><div><h3>Food & Nutrition</h3><p>Track simple food habits</p></div>›</div>
+ <div class="log-tile" onclick="openSleep()"><div class="round-icon">${icon('sleep')}</div><div><h3>Sleep</h3><p>Duration and quality</p></div>›</div>
+ <div class="log-tile" onclick="exportData()"><div class="round-icon">${icon('chart')}</div><div><h3>Export my data</h3><p>Download a JSON backup</p></div>›</div>
+ <div class="log-tile" onclick="resetDemo()"><div class="round-icon">${icon('more')}</div><div><h3>Reset demo data</h3><p>Restore the sample dashboard</p></div>›</div>`)}`;
 }
 
 function openModal(title,body){
