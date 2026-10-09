@@ -46,3 +46,9 @@ For phone installation, publish the folder to an HTTPS static host such as GitHu
 - Replaced navigation and common feature symbols with consistent outline SVG icons.
 - Refined typography with DM Sans and system-font fallbacks.
 - Updated service-worker cache version so browsers can fetch the new UI.
+
+
+## UI refinement
+- Increased separation between metric cards and Today's checklist.
+- Standardized spacing between dashboard sections.
+- Improved metric card minimum height and checklist row padding.
